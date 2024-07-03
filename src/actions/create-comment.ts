@@ -1,3 +1,7 @@
 'use server';
 
-export default async function createComment() {}
+import { revalidatePath } from 'next/cache';
+
+export default async function createComment() {
+  // revalidatePath(`/topics/`)
+}

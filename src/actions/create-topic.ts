@@ -1,3 +1,7 @@
 'use server';
 
-export default async function createTopic() {}
+import { revalidatePath } from 'next/cache';
+
+export default async function createTopic() {
+  revalidatePath('/');
+}

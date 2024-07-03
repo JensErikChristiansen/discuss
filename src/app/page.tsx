@@ -4,6 +4,8 @@ import * as actions from '@/actions';
 import Image from 'next/image';
 import Profile from '@/components/profile';
 
+export const revalidate = 10;
+
 export default async function Home() {
   const session = await auth();
 

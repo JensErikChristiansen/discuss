@@ -1,3 +1,7 @@
 'use server';
 
-export default async function createPost() {}
+import { revalidatePath } from 'next/cache';
+
+export default async function createPost() {
+  // revalidatePath('/');
+}
