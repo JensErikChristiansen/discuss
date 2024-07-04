@@ -8,40 +8,17 @@ import {
   Input,
   Button,
   Avatar,
-  NavbarMenu,
-  NavbarMenuItem,
-  NavbarMenuToggle,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from '@nextui-org/react';
 
 import { auth } from '@/auth';
+import * as actions from '@/actions';
 
 // import { useSession } from 'next-auth/react';
 
 export default async function Header() {
-  const session = await auth();
-
-  function AuthContent() {
-    if (session?.user) {
-      return <Avatar src={session.user.image || ''}></Avatar>;
-    }
-
-    return (
-      <>
-        <NavbarItem>
-          <Button type="submit" color="secondary" variant="bordered">
-            Sign In
-          </Button>
-        </NavbarItem>
-
-        <NavbarItem>
-          <Button type="submit" color="primary" variant="flat">
-            Sign Up
-          </Button>
-        </NavbarItem>
-      </>
-    );
-  }
-
   return (
     <Navbar className="shadow mb-6">
       <NavbarBrand>
@@ -60,5 +37,46 @@ export default async function Header() {
         <AuthContent />
       </NavbarContent>
     </Navbar>
+  );
+}
+
+async function AuthContent() {
+  const session = await auth();
+
+  if (session?.user) {
+    return (
+      <Popover placement="left">
+        <PopoverTrigger>
+          <Avatar src={session.user.image || ''} />
+        </PopoverTrigger>
+        <PopoverContent>
+          <div className="p-4">
+            <form action={actions.signOut}>
+              <Button type="submit">Sign Out</Button>
+            </form>
+          </div>
+        </PopoverContent>
+      </Popover>
+    );
+  }
+
+  return (
+    <>
+      <NavbarItem>
+        <form action={actions.signIn}>
+          <Button type="submit" color="secondary" variant="bordered">
+            Sign In
+          </Button>
+        </form>
+      </NavbarItem>
+
+      <NavbarItem>
+        <form action={actions.signIn}>
+          <Button type="submit" color="primary" variant="flat">
+            Sign Up
+          </Button>
+        </form>
+      </NavbarItem>
+    </>
   );
 }
