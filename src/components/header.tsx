@@ -20,6 +20,28 @@ import { auth } from '@/auth';
 export default async function Header() {
   const session = await auth();
 
+  function AuthContent() {
+    if (session?.user) {
+      return <Avatar src={session.user.image || ''}></Avatar>;
+    }
+
+    return (
+      <>
+        <NavbarItem>
+          <Button type="submit" color="secondary" variant="bordered">
+            Sign In
+          </Button>
+        </NavbarItem>
+
+        <NavbarItem>
+          <Button type="submit" color="primary" variant="flat">
+            Sign Up
+          </Button>
+        </NavbarItem>
+      </>
+    );
+  }
+
   return (
     <Navbar className="shadow mb-6">
       <NavbarBrand>
@@ -35,9 +57,7 @@ export default async function Header() {
       </NavbarContent>
 
       <NavbarContent justify="end">
-        <NavbarItem>
-          {session?.user ? <Button>Sign Out</Button> : <Button>Sign in</Button>}
-        </NavbarItem>
+        <AuthContent />
       </NavbarContent>
     </Navbar>
   );
