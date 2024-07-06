@@ -16,7 +16,7 @@ export default async function TopicPage({ params }: Props) {
       </div>
 
       <div>
-        <CreatePostForm />
+        <CreatePostForm slug={slug} />
       </div>
     </div>
   );

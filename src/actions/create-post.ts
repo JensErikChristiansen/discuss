@@ -22,6 +22,7 @@ const schema = z.object({
 });
 
 export default async function createPost(
+  slug: string,
   formState: FormState,
   formData: FormData,
 ): Promise<FormState> {
@@ -45,8 +46,43 @@ export default async function createPost(
     };
   }
 
-  return {
-    errors: {},
-  };
-  // revalidatePath(paths.showTopic());
+  let post: Post;
+
+  try {
+    const topic = await db.topic.findFirst({
+      where: {
+        slug,
+      },
+    });
+
+    if (!topic) {
+      throw new Error('Topic not found');
+    }
+
+    post = await db.post.create({
+      data: {
+        title,
+        content,
+        userId: session.user.id,
+        topicId: topic.id,
+      },
+    });
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      return {
+        errors: {
+          _form: [err.message],
+        },
+      };
+    }
+
+    return {
+      errors: {
+        _form: ['An unknown error occurred'],
+      },
+    };
+  }
+
+  revalidatePath(paths.showTopic(slug));
+  redirect(paths.showPost(slug, post.id));
 }

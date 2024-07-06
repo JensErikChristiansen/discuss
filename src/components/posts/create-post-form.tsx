@@ -14,8 +14,12 @@ import {
 
 import FormButton from '@/components/common/form-button';
 
-export default function CreatePostForm() {
-  const [formState, dispatch] = useFormState(createPost, {
+type Props = {
+  slug: string;
+};
+
+export default function CreatePostForm({ slug }: Props) {
+  const [formState, dispatch] = useFormState(createPost.bind(null, slug), {
     errors: {},
   });
 
