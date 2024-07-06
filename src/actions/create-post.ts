@@ -25,6 +25,16 @@ export default async function createPost(
   formState: FormState,
   formData: FormData,
 ): Promise<FormState> {
+  const session = await auth();
+
+  if (!session || !session.user) {
+    return {
+      errors: {
+        _form: ['You must be logged in to create a post'],
+      },
+    };
+  }
+
   const title = formData.get('title') as string;
   const content = formData.get('content') as string;
   const validation = schema.safeParse({ title, content });
