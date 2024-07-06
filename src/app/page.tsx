@@ -1,4 +1,3 @@
-import { Button } from '@nextui-org/react';
 import CreateTopicForm from '@/components/create-topic-form';
 
 export default function Home() {
