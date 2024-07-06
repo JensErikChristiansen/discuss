@@ -2,9 +2,11 @@
 
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
-import { useFormState } from 'react-dom';
 import { db } from '@/db';
 import { auth } from '@/auth';
+import { redirect } from 'next/navigation';
+import paths from '@/paths';
+import { Topic } from '@prisma/client';
 
 const createTopicSchema = z.object({
   name: z
@@ -40,7 +42,11 @@ export default async function createTopic(
 
   const name = formData.get('name') as string;
   const description = formData.get('description') as string;
-  const validation = createTopicSchema.safeParse({ name, description });
+
+  const validation = createTopicSchema.safeParse({
+    name,
+    description,
+  });
 
   if (!validation.success) {
     return {
@@ -48,14 +54,31 @@ export default async function createTopic(
     };
   }
 
-  return {
-    errors: {},
-  };
+  let topic: Topic; // why create a variable? why not just use the name variable above in the redirect?
 
-  // db.topic.create({
-  //   slug: name,
-  //   description,
-  // });
+  try {
+    topic = await db.topic.create({
+      data: {
+        slug: validation.data.name,
+        description: validation.data.description,
+      },
+    });
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      return {
+        errors: {
+          _form: [err.message],
+        },
+      };
+    }
 
-  revalidatePath('/');
+    return {
+      errors: {
+        _form: ['Something went wrong'],
+      },
+    };
+  }
+
+  revalidatePath(paths.home());
+  redirect(paths.showTopic(topic.slug));
 }
