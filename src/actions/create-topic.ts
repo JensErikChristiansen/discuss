@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { useFormState } from 'react-dom';
 import { db } from '@/db';
+import { auth } from '@/auth';
 
 const createTopicSchema = z.object({
   name: z
@@ -19,6 +20,7 @@ type FormState = {
   errors: {
     name?: string[];
     description?: string[];
+    _form?: string[];
   };
 };
 
@@ -26,6 +28,16 @@ export default async function createTopic(
   formState: FormState,
   formData: FormData,
 ): Promise<FormState> {
+  const session = await auth();
+
+  if (!session || !session.user) {
+    return {
+      errors: {
+        _form: ['You must be logged in to create a topic.'],
+      },
+    };
+  }
+
   const name = formData.get('name') as string;
   const description = formData.get('description') as string;
   const validation = createTopicSchema.safeParse({ name, description });
