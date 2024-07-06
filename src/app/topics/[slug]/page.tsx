@@ -1,4 +1,4 @@
-import { db } from '@/db';
+import CreatePostForm from '@/components/posts/create-post-form';
 
 type Props = {
   params: {
@@ -15,7 +15,9 @@ export default async function TopicPage({ params }: Props) {
         <h1 className="text-2xl font-bold mb-2">{slug}</h1>
       </div>
 
-      <div></div>
+      <div>
+        <CreatePostForm />
+      </div>
     </div>
   );
 }
