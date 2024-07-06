@@ -15,6 +15,10 @@ import {
 import FormButton from '@/components/common/form-button';
 
 export default function CreatePostForm() {
+  const [formState, dispatch] = useFormState(createPost, {
+    errors: {},
+  });
+
   return (
     <Popover placement="left">
       <PopoverTrigger>
@@ -22,7 +26,7 @@ export default function CreatePostForm() {
       </PopoverTrigger>
 
       <PopoverContent>
-        <form>
+        <form action={dispatch}>
           <div className="flex flex-col gap-4 p-4 w-80">
             <h3 className="text-lg">Create a post</h3>
 
@@ -31,13 +35,17 @@ export default function CreatePostForm() {
               label="Title"
               labelPlacement="outside"
               placeholder="title"
+              isInvalid={!!formState.errors.title}
+              errorMessage={formState.errors.title?.join(', ')}
             />
 
-            <Input
+            <Textarea
               name="content"
               label="Content"
               labelPlacement="outside"
               placeholder="Content"
+              isInvalid={!!formState.errors.content}
+              errorMessage={formState.errors.content?.join(', ')}
             />
 
             <FormButton>Create Post</FormButton>
