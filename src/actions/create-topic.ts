@@ -2,6 +2,7 @@
 
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
+import { useFormState } from 'react-dom';
 import { db } from '@/db';
 
 const createTopicSchema = z.object({
@@ -14,19 +15,35 @@ const createTopicSchema = z.object({
   description: z.string().min(10),
 });
 
-export default async function createTopic(formData: FormData) {
+type FormState = {
+  errors: {
+    name?: string[];
+    description?: string[];
+  };
+};
+
+export default async function createTopic(
+  formState: FormState,
+  formData: FormData,
+): Promise<FormState> {
   const name = formData.get('name') as string;
   const description = formData.get('description') as string;
   const validation = createTopicSchema.safeParse({ name, description });
 
   if (!validation.success) {
-    console.log(validation.error.flatten().fieldErrors);
+    return {
+      errors: validation.error.flatten().fieldErrors,
+    };
   }
+
+  return {
+    errors: {},
+  };
 
   // db.topic.create({
   //   slug: name,
   //   description,
-  // })
+  // });
 
   revalidatePath('/');
 }
