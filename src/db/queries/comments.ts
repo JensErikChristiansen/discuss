@@ -11,6 +11,7 @@ export type CommentListData = Comment & {
 export function fetchCommentsByPostId(
   postId: string,
 ): Promise<CommentListData[]> {
+  console.log('making a query', postId);
   return db.comment.findMany({
     where: {
       postId,

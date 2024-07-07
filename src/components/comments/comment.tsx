@@ -1,13 +1,14 @@
 import Image from 'next/image';
 import CreateCommentForm from '@/components/comments/create-comment-form';
-import type { CommentListData } from '@/db/queries/comments';
+import { fetchCommentsByPostId } from '@/db/queries/comments';
 
 type Props = {
   commentId: string;
-  comments: CommentListData[];
+  postId: string;
 };
 
-export default function Comment({ commentId, comments }: Props) {
+export default async function Comment({ commentId, postId }: Props) {
+  const comments = await fetchCommentsByPostId(postId);
   const comment = comments.find((c) => c.id === commentId);
 
   if (!comment) {
@@ -17,7 +18,7 @@ export default function Comment({ commentId, comments }: Props) {
   const children = comments.filter((c) => c.parentId === commentId);
 
   const renderedChildren = children.map((child) => {
-    return <Comment key={child.id} commentId={child.id} comments={comments} />;
+    return <Comment key={child.id} commentId={child.id} postId={postId} />;
   });
 
   return (
