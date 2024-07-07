@@ -3,15 +3,16 @@ import Post from '@/components/posts/post';
 import CommentList from '@/components/comments/comment-list';
 import CreateCommentForm from '@/components/comments/create-comment-form';
 import paths from '@/paths';
+import { fetchCommentsByPostId } from '@/db/queries/comments';
 
-interface PostShowPageProps {
+type Props = {
   params: {
     slug: string;
     postId: string;
   };
-}
+};
 
-export default async function PostPage({ params }: PostShowPageProps) {
+export default async function PostPage({ params }: Props) {
   const { slug, postId } = params;
 
   return (
@@ -21,7 +22,7 @@ export default async function PostPage({ params }: PostShowPageProps) {
       </Link>
       <Post postId={postId} />
       <CreateCommentForm postId={postId} startOpen />
-      {/* <CommentList comments={comments} /> */}
+      <CommentList fetchData={fetchCommentsByPostId.bind(null, postId)} />
     </div>
   );
 }
