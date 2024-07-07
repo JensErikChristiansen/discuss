@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import { useFormState } from "react-dom";
-import { useEffect, useRef, useState } from "react";
-import { Textarea, Button } from "@nextui-org/react";
-import FormButton from "@/components/common/form-button";
-import * as actions from "@/actions";
+import { useFormState } from 'react-dom';
+import { useEffect, useRef, useState } from 'react';
+import { Textarea, Button } from '@nextui-org/react';
+import FormButton from '@/components/common/form-button';
+import * as actions from '@/actions';
 
-interface CommentCreateFormProps {
+type Props = {
   postId: string;
   parentId?: string;
   startOpen?: boolean;
-}
+};
 
-export default function CommentCreateForm({
+export default function CreateCommentForm({
   postId,
   parentId,
   startOpen,
-}: CommentCreateFormProps) {
+}: Props) {
   const [open, setOpen] = useState(startOpen);
   const ref = useRef<HTMLFormElement | null>(null);
   const [formState, action] = useFormState(
     actions.createComment.bind(null, { postId, parentId }),
-    { errors: {} }
+    { errors: {} },
   );
 
   useEffect(() => {
@@ -42,12 +42,12 @@ export default function CommentCreateForm({
           label="Reply"
           placeholder="Enter your comment"
           isInvalid={!!formState.errors.content}
-          errorMessage={formState.errors.content?.join(", ")}
+          errorMessage={formState.errors.content?.join(', ')}
         />
 
         {formState.errors._form ? (
           <div className="p-2 bg-red-200 border rounded border-red-400">
-            {formState.errors._form?.join(", ")}
+            {formState.errors._form?.join(', ')}
           </div>
         ) : null}
 
