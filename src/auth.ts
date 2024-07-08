@@ -1,13 +1,14 @@
-import NextAuth from "next-auth";
-import GitHubProvider from "next-auth/providers/github";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { db } from "@/db";
+import NextAuth from 'next-auth';
+import GitHubProvider from 'next-auth/providers/github';
+import GoogleProvider from 'next-auth/providers/google';
+import { PrismaAdapter } from '@auth/prisma-adapter';
+import { db } from '@/db';
 
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 
 if (!GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET) {
-  throw new Error("Missing github oauth credentials");
+  throw new Error('Missing github oauth credentials');
 }
 
 export const {
@@ -22,6 +23,16 @@ export const {
       clientId: GITHUB_CLIENT_ID,
       clientSecret: GITHUB_CLIENT_SECRET,
     }),
+    // GoogleProvider,
+    // GoogleProvider({
+    //   authorization: {
+    //     params: {
+    //       prompt: 'consent',
+    //       access_type: 'offline',
+    //       response_type: 'code',
+    //     },
+    //   },
+    // }),
   ],
   callbacks: {
     // Usually not needed, here we are fixing a bug in nextauth
