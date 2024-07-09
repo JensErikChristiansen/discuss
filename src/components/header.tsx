@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import SearchInput from '@/components/search-input';
+import { Suspense } from 'react';
 
 import {
   Navbar,
@@ -21,7 +22,9 @@ export default async function Header() {
 
       <NavbarContent justify="center">
         <NavbarItem>
-          <SearchInput />
+          <Suspense>
+            <SearchInput />
+          </Suspense>
         </NavbarItem>
       </NavbarContent>
 
