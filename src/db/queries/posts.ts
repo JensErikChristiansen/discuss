@@ -13,6 +13,32 @@ export type PostListData = Post & {
   };
 };
 
+export function fetchPostsBySearchTerm(term: string): Promise<PostListData[]> {
+  return db.post.findMany({
+    where: {
+      OR: [
+        {
+          title: { contains: term },
+        },
+        {
+          content: { contains: term },
+        },
+      ],
+    },
+    include: {
+      topic: {
+        select: { slug: true },
+      },
+      user: {
+        select: { name: true, image: true },
+      },
+      _count: {
+        select: { comments: true },
+      },
+    },
+  });
+}
+
 export function fetchPostsByTopicSlug(slug: string): Promise<PostListData[]> {
   return db.post.findMany({
     where: {
